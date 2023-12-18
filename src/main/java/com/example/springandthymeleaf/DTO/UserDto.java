@@ -1,5 +1,6 @@
 package com.example.springandthymeleaf.DTO;
 
+import com.example.springandthymeleaf.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,10 @@ public class UserDto {
     private String userName;
     @NotEmpty(message = "Password should be empty")
     private String password;
+    private String role;
+
+
+
 }
+
+

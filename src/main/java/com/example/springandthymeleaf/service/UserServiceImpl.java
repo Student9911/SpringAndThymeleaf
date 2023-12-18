@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,10 +62,14 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+
     private UserDto mapToUserDto(User user) {
         UserDto userDto = new UserDto();
 
         userDto.setUserName(user.getUserName());
+        userDto.setRole(user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.joining(", ")));
 
         return userDto;
     }

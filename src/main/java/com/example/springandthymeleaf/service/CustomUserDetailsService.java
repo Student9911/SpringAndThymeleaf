@@ -2,7 +2,6 @@ package com.example.springandthymeleaf.service;
 
 import com.example.springandthymeleaf.entity.Role;
 import com.example.springandthymeleaf.entity.User;
-import com.example.springandthymeleaf.repository.RoleRepository;
 import com.example.springandthymeleaf.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,12 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     private LogService logService;
 
 
-
-
     public CustomUserDetailsService(UserRepository userRepository, LogService logService) {
         this.userRepository = userRepository;
         this.logService = logService;
-
 
 
     }

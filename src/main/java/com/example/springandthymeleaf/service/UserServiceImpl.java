@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,6 +66,7 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = new UserDto();
 
         userDto.setUserName(user.getUserName());
+        userDto.setId(user.getId());
         userDto.setRole(user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.joining(", ")));
@@ -78,5 +78,9 @@ public class UserServiceImpl implements UserService {
         Role role = new Role();
         role.setName("ROLE_USER");
         return roleRepository.save(role);
+    }
+
+    public void updateUser(User user) {
+        userRepository.save(user);
     }
 }

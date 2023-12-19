@@ -53,7 +53,7 @@ public class LogToFile {
 
         try (FileWriter writer = new FileWriter(logPath)) {
             for (LogEntry log : logs) {
-                writer.write(log.getTimeStamp() + "| " +
+                writer.write(log.getId() + "| " + log.getTimeStamp() + "| " +
                         log.getLevel() + " | " + log.getMessage() + "\n");
             }
         } catch (IOException e) {

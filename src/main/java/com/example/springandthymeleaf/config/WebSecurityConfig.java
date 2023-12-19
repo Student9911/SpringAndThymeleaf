@@ -1,4 +1,5 @@
 package com.example.springandthymeleaf.config;
+import com.example.springandthymeleaf.service.LogService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,7 +20,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, LogService logService) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/register/**").permitAll()
@@ -33,10 +34,13 @@ public class WebSecurityConfig {
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/default") // Общая страница для всех пользователей
                                 .permitAll()
-                ).logout(
-                        logout -> logout
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                .permitAll()
+                )  .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            logService.saveLog("выход из системы", "пользователь: " + authentication.getName() + " вышел из системы");
+                            response.sendRedirect("/login");
+                        })
+                        .permitAll()
                 );
 
         // Добавляем настройку перенаправления для пользователей с различными ролями

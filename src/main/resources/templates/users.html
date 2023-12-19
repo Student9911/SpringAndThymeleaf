@@ -38,26 +38,31 @@
   <div class="row col-md-10">
     <h2>List of Registered Users</h2>
   </div>
-  <table class="table table-bordered table-hover">
+  <table class="table table-bordered table-striped" id="userTable">
     <thead class="table-dark">
     <tr>
+      <th>ID</th>
       <th>Логин</th>
       <th>ROLE пользователя</th>
       <th>а тут кнопки и все такое</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${users}">
+    <tr th:each="user: ${users}">
+      <td th:text="${user.id}" />
       <td th:text="${user.userName}" />
       <td th:text="${user.role}" />
       <td>
-        <a th:href="@{/showUpdateForm(studentId=${user.id})}" class="btn btn-info">Update</a>
+        <a th:href="@{/showUpdateForm(userId=${user.id})}" class="btn btn-info">Update</a>
 
-        <a th:href="@{/deleteStudent(studentId=${user.id})}" class="btn btn-danger ml-2">Delete</a>
+        <a th:href="@{/deleteUser(userId=${user.id})}" class="btn btn-danger ml-2">Delete</a>
+
       </td>
     </tr>
     </tbody>
   </table>
+  <hr/>
+  <a th:href="@{/register}" class="btn btn-primary">Добавить пользователя</a>
 </div>
 </body>
 </html>

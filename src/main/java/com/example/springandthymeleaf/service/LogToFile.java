@@ -2,6 +2,7 @@ package com.example.springandthymeleaf.service;
 
 import com.example.springandthymeleaf.entity.LogEntry;
 import com.example.springandthymeleaf.repository.LogEntryRepository;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@NoArgsConstructor
 @Slf4j
 @Service
 public class LogToFile {

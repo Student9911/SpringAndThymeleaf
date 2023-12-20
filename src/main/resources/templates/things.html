@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/index}">Registration and Login System</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/list}">Students</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/logs}">For logs</a>
+                </li>
+            </ul>
+
+        </div>
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">Пользователь с таким именем уже существует, <br>
+                введите другое имя</div>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row col-md-10">
+        <h2>Список пользователей</h2>
+    </div>
+    <table class="table table-bordered table-striped" id="userTable">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Логин</th>
+            <th>ROLE пользователя</th>
+            <th>а тут кнопки и все такое</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="things: ${things}">
+            <td th:text="${things.id}" />
+            <td th:text="${things.name}" />
+            <td th:text="${things.userNames}" />
+            <td th:text="${things.quantity}" />
+
+            <td>
+                <a style="color: blueviolet"  th:href="@{/showUpdateForm(userId=${things.id})}" class="btn btn-info">Update</a>
+
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <hr/>
+    <a th:href="@{/register}" class="btn btn-primary">Добавить пользователя</a>
+</div>
+</body>
+</html>

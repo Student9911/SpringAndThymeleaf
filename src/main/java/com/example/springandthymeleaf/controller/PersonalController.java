@@ -2,9 +2,11 @@ package com.example.springandthymeleaf.controller;
 
 import com.example.springandthymeleaf.DTO.UserDto;
 import com.example.springandthymeleaf.entity.Role;
+import com.example.springandthymeleaf.entity.Thing;
 import com.example.springandthymeleaf.entity.User;
 import com.example.springandthymeleaf.repository.LogEntryRepository;
 import com.example.springandthymeleaf.repository.RoleRepository;
+import com.example.springandthymeleaf.repository.ThingRepository;
 import com.example.springandthymeleaf.repository.UserRepository;
 import com.example.springandthymeleaf.service.LogService;
 import com.example.springandthymeleaf.service.LogToFile;
@@ -24,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -40,26 +43,27 @@ public class PersonalController {
     private PasswordEncoder passwordEncoder;
 
     private final LogService logService;
+    private final ThingRepository thingRepository;
 
 
     public PersonalController(LogEntryRepository logEntryRepository,
                               PasswordEncoder passwordEncoder,
                               UserRepository userRepository, UserService userService,
-                              RoleRepository roleRepository, LogService logService) {
+                              RoleRepository roleRepository, LogService logService,
+                              ThingRepository thingRepository) {
         this.logEntryRepository = logEntryRepository;
         this.userService = userService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.logService = logService;
+        this.thingRepository = thingRepository;
     }
 
 
-    @GetMapping("/log")
+  /*  @GetMapping("/user")
     public String getPeople(Model model) {
         //logService.saveLog("переход /log", "");
-        LogToFile log = new LogToFile(logEntryRepository);
-        log.exportLogs();
         model.addAttribute("something", "hello in controller");
         model.addAttribute("people", Arrays.asList(
                 new Persons("John", 20),
@@ -67,6 +71,21 @@ public class PersonalController {
                 new Persons("Simon", 22)
         ));
         return "ListPeople";
+    }*/
+
+    @GetMapping("/users/thing")
+    public String thing(Model model) {
+        List<Thing> things = thingRepository.findAll();
+        model.addAttribute("things", things);
+        return "things";
+    }
+
+
+    @GetMapping("/user")
+    public String users(Model model) {
+        List<UserDto> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+        return "list-usersForUser";
     }
 
     @GetMapping("/logs")
@@ -79,6 +98,14 @@ public class PersonalController {
         mav.addObject("logs", logEntryRepository.findAll());
         return mav;
     }
+    @GetMapping("/users/log")
+    public String saveLogToFile(){
+        LogToFile logToFile = new LogToFile(logEntryRepository);
+        logToFile.exportLogs();
+     return "redirect:/logs";
+    }
+
+
 
     @GetMapping("/deleteUser")
     public String deleteUser(@RequestParam Long userId, Principal principal) {
@@ -112,7 +139,7 @@ public class PersonalController {
 
     }
 
-    @PostMapping("/user/update")
+    @PostMapping("/users/update")
     public String updateUser(@Valid @ModelAttribute("user") UserDto userDto,
                              @RequestParam("roles") String rolesValue,
                              Principal principal) {
@@ -120,7 +147,7 @@ public class PersonalController {
         if (userService != null) {
             User existingUser = userService.findUserById(userDto.getId());
             if (existingUser.getId() == 1) {
-                return "redirect:/user/profile?error";
+                return "redirect:/showUpdateForm?error";
             }
             // Создаем новый объект User с обновленной ролью
             User updatedUser = new User();
@@ -129,8 +156,11 @@ public class PersonalController {
             String s;
             if (rolesValue.equals("1")) {
                 s = "ROLE_ADMIN";
-            } else {
+            } else if (rolesValue.equals("2")){
                 s = "ROLE_USER";
+            } else {
+                s = "READ_ONLY";
+
             }
             Role role = roleRepository.findByName(s);
             logService.saveLog("INFO", "User " + principal.getName() +

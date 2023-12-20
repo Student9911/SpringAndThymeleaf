@@ -34,7 +34,11 @@
   <h3>Add New Student</h3>
   <hr/>
 
-  <form th:action="@{/user/update}" th:object="${user}" method="POST">
+
+  <form th:action="@{/users/update}" th:object="${user}" method="POST">
+    <div th:if="${param.error}">
+      <div class="alert alert-danger">нельзя удалять admin</div>
+    </div>
 
     <input type="text" th:field="*{id}" class="form-control col-4 mb-4" placeholder="Enter Name"/>
     <input type="text" th:field="*{userName}" class="form-control col-4 mb-4" placeholder="Enter Name"/>

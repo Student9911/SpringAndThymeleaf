@@ -25,8 +25,8 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/register/**").permitAll()
                 .antMatchers("/index").permitAll()
-                .antMatchers("/users").hasRole("ADMIN")
-                .antMatchers("/ListPeople").hasRole("USER")
+                .antMatchers("/users/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasRole("USER")
                 .and()
                 .formLogin(
                         form -> form
@@ -50,7 +50,7 @@ public class WebSecurityConfig {
                     response.sendRedirect("/users"); // Перенаправляем администраторов
                     return;
                 } else if (authority.getAuthority().equals("ROLE_USER")) {
-                    response.sendRedirect("/log"); // Перенаправляем обычных пользователей
+                    response.sendRedirect("/user"); // Перенаправляем обычных пользователей
                     return;
                 }
             }

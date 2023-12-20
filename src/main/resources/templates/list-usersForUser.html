@@ -48,7 +48,7 @@
       <th>ID</th>
       <th>Логин</th>
       <th>ROLE пользователя</th>
-      <th>а тут кнопки и все такое</th>
+
     </tr>
     </thead>
     <tbody>
@@ -57,15 +57,11 @@
       <td th:text="${user.userName}" />
       <td th:text="${user.role}" />
       <td>
-        <a style="color: blueviolet"  th:href="@{/showUpdateForm(userId=${user.id})}" class="btn btn-info">Update</a>
-
-
       </td>
     </tr>
     </tbody>
   </table>
   <hr/>
-  <a th:href="@{/register}" class="btn btn-primary">Добавить пользователя</a>
 </div>
 </body>
 </html>

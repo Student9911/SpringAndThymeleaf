@@ -4,6 +4,7 @@ import com.example.springandthymeleaf.DTO.UserDto;
 import com.example.springandthymeleaf.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserService {
@@ -15,5 +16,6 @@ public interface UserService {
 
     List<UserDto> findAllUsers();
     void updateUser(User user);
+    User findUserById(Long userId);
 
 }

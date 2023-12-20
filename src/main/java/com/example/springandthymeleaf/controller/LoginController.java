@@ -64,8 +64,10 @@ public class LoginController {
         if (userService != null) {
             User existingUser = userService.findUserByUserName(userDto.getUserName());
             if (existingUser != null && existingUser.getUserName() != null && !existingUser.getUserName().isEmpty()) {
+                log.error("пользователь с таким именем уже существует");
                 result.rejectValue("userName", null,
-                        "На этот адрес электронной почты уже зарегистрирована учетная запись.");
+                        "пользователь с таким именем уже существует");
+                return "redirect:/register?error";
             }
         } else {
             // Handle the case when userService is null

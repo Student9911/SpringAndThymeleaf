@@ -20,12 +20,15 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final LogService logService;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder, LogService logService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.logService = logService;
     }
 
     @Override
@@ -51,6 +54,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUserName(userName);
     }
 
+    @Override
+    public User findUserById(Long userId) {
+        logService.saveLog("INFO", "userId = " + userId);
+        try {
+            return userRepository.findById(userId).orElse(null);
+        } catch (Exception e) {
+            // обработка исключения, если не удалось выполнить запрос к базе данных
+            logService.saveLog("INFO", "findUserById пустой" + " " + userId);
+            return null;
+        }
+    }
 
 
     @Override

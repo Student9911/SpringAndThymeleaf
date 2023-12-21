@@ -73,12 +73,7 @@ public class PersonalController {
         return "ListPeople";
     }*/
 
-    @GetMapping("/users/thing")
-    public String thing(Model model) {
-        List<Thing> things = thingRepository.findAll();
-        model.addAttribute("things", things);
-        return "things";
-    }
+
 
 
     @GetMapping("/user")

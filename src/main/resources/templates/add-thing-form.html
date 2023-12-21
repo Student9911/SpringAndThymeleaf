@@ -31,20 +31,11 @@
 
   <hr/>
 
-  <h3>Add New Student</h3>
+  <h3>Добавить вещь</h3>
   <hr/>
-  <form th:action="@{/users/update}" th:object="${user}" method="POST">
-    <div th:if="${param.error}">
-      <div class="alert alert-danger">нельзя удалять admin</div>
-    </div>
-
-    <input type="text" th:field="*{id}" class="form-control col-4 mb-4" placeholder="Enter Name"/>
-    <input type="text" th:field="*{userName}" class="form-control col-4 mb-4" placeholder="Enter Name"/>
-    <input type="text" th:field="${user.password}" class="form-control col-4 mb-4" placeholder="Enter password"/>
-    <input type="text" th:field="*{roles}" class="form-control col-4 mb-4" placeholder="Enter password"/>
-
-
-
+  <form th:action="@{/thing/saveThing}" th:object="${thing}" method="POST">
+    <input type="text" th:field="*{name}" class="form-control col-4 mb-4" placeholder="введите название вещи"/>
+    <input type="text" th:field="*{quantity}" class="form-control col-4 mb-4" placeholder="введите количество"/>
 
     <button type="submit" class="btn btn-primary col-2">Save</button>
 
@@ -52,7 +43,7 @@
 
   </form>
   <hr/>
-  <a th:href="@{/list}">Back to list</a>
+  <a th:href="@{/thing/things}">Back to list</a>
 </div>
 
 </body>

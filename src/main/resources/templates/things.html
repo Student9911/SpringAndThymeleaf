@@ -46,20 +46,22 @@
         <thead class="table-dark">
         <tr>
             <th>ID</th>
-            <th>Логин</th>
-            <th>ROLE пользователя</th>
+            <th>название вещи</th>
+            <th>кто добавил</th>
+            <th>количество</th>
             <th>а тут кнопки и все такое</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="things: ${things}">
-            <td th:text="${things.id}" />
-            <td th:text="${things.name}" />
-            <td th:text="${things.userNames}" />
-            <td th:text="${things.quantity}" />
+        <tr th:each="thing: ${things}">
+            <td th:text="${thing.id}" />
+            <td th:text="${thing.name}" />
+            <td th:text="${thing.userNames}" />
+            <td th:text="${thing.quantity}" />
 
             <td>
-                <a style="color: blueviolet"  th:href="@{/showUpdateForm(userId=${things.id})}" class="btn btn-info">Update</a>
+                <a th:href="@{/thing/showUpdateForm(thingId=${thing.id})}" class="btn btn-info">Update</a>
+                <a th:href="@{/thing/deleteThing(thingId=${thing.id})}" class="btn btn-danger ml-2">Delete</a>
 
 
             </td>
@@ -67,7 +69,7 @@
         </tbody>
     </table>
     <hr/>
-    <a th:href="@{/register}" class="btn btn-primary">Добавить пользователя</a>
+    <a th:href="@{/thing/addThingForm}" class="btn btn-primary">Добавить вещь</a>
 </div>
 </body>
 </html>

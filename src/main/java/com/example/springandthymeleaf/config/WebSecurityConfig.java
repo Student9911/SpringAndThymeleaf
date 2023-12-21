@@ -23,18 +23,33 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, LogService logService) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/register/**").permitAll()
+                .antMatchers("/register/").permitAll()
                 .antMatchers("/index").permitAll()
-                .antMatchers("/users/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/users/").hasRole("ADMIN")
+                .antMatchers("/user/").hasAnyRole("ONLY", "USER", "ADMIN")
                 .and()
                 .formLogin(
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/default") // Общая страница для всех пользователей
+                                .successHandler((request, response, authentication) -> {
+                                    for (GrantedAuthority authority : authentication.getAuthorities()) {
+                                        if (authority.getAuthority().equals("ROLE_ADMIN")) {
+                                            response.sendRedirect("/users"); // Перенаправляем администраторов
+                                            return;
+                                        } else if (authority.getAuthority().equals("ROLE_USER")) {
+                                            response.sendRedirect("/user"); // Перенаправляем обычных пользователей
+                                            return;
+                                        } else if (authority.getAuthority().equals("READ_ONLY")) {
+                                            response.sendRedirect("/user"); // Перенаправляем обычных пользователей
+                                            return;
+                                        }
+                                    }
+                                })
                                 .permitAll()
-                )  .logout(logout -> logout
+                )
+                .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessHandler((request, response, authentication) -> {
                             logService.saveLog("выход из системы", "пользователь: " + authentication.getName() + " вышел из системы");
@@ -42,20 +57,6 @@ public class WebSecurityConfig {
                         })
                         .permitAll()
                 );
-
-        // Добавляем настройку перенаправления для пользователей с различными ролями
-        http.formLogin().successHandler((request, response, authentication) -> {
-            for (GrantedAuthority authority : authentication.getAuthorities()) {
-                if (authority.getAuthority().equals("ROLE_ADMIN")) {
-                    response.sendRedirect("/users"); // Перенаправляем администраторов
-                    return;
-                } else if (authority.getAuthority().equals("ROLE_USER")) {
-                    response.sendRedirect("/user"); // Перенаправляем обычных пользователей
-                    return;
-                }
-            }
-
-        });
 
         return http.build();
     }

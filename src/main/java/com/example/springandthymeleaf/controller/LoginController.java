@@ -1,7 +1,6 @@
 package com.example.springandthymeleaf.controller;
 
 import com.example.springandthymeleaf.DTO.UserDto;
-import com.example.springandthymeleaf.entity.Role;
 import com.example.springandthymeleaf.entity.User;
 import com.example.springandthymeleaf.repository.UserRepository;
 import com.example.springandthymeleaf.service.UserService;
@@ -13,11 +12,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -33,9 +30,6 @@ public class LoginController {
     public LoginController(UserService userService) {
         this.userService = userService;
     }
-
-
-
 
 
     @GetMapping("/")

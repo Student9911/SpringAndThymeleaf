@@ -2,15 +2,10 @@ package com.example.springandthymeleaf.controller;
 
 import com.example.springandthymeleaf.DTO.UserDto;
 import com.example.springandthymeleaf.entity.Role;
-import com.example.springandthymeleaf.entity.Thing;
 import com.example.springandthymeleaf.entity.User;
-import com.example.springandthymeleaf.repository.LogEntryRepository;
-import com.example.springandthymeleaf.repository.RoleRepository;
-import com.example.springandthymeleaf.repository.ThingRepository;
-import com.example.springandthymeleaf.repository.UserRepository;
+import com.example.springandthymeleaf.repository.*;
 import com.example.springandthymeleaf.service.LogService;
 import com.example.springandthymeleaf.service.LogToFile;
-import com.example.springandthymeleaf.service.Persons;
 import com.example.springandthymeleaf.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +39,14 @@ public class PersonalController {
 
     private final LogService logService;
     private final ThingRepository thingRepository;
+    private final UserRolesRepository userRolesRepository;
 
 
     public PersonalController(LogEntryRepository logEntryRepository,
                               PasswordEncoder passwordEncoder,
                               UserRepository userRepository, UserService userService,
                               RoleRepository roleRepository, LogService logService,
-                              ThingRepository thingRepository) {
+                              ThingRepository thingRepository, UserRolesRepository userRolesRepository) {
         this.logEntryRepository = logEntryRepository;
         this.userService = userService;
         this.userRepository = userRepository;
@@ -58,6 +54,7 @@ public class PersonalController {
         this.roleRepository = roleRepository;
         this.logService = logService;
         this.thingRepository = thingRepository;
+        this.userRolesRepository = userRolesRepository;
     }
 
 
@@ -102,12 +99,14 @@ public class PersonalController {
 
 
 
-    @GetMapping("/deleteUser")
+    @GetMapping("/users/deleteUser")
     public String deleteUser(@RequestParam Long userId, Principal principal) {
         logService.saveLog("INFO", "User " + principal.getName() +
                 " удалил пользователя с ID: " + userId);
         log.info("connection -> deleteStudent");
+        userRolesRepository.deleteById(userId);
         userRepository.deleteById(userId);
+
         return "redirect:/users";
     }
 

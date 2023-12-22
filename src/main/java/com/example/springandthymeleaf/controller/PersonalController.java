@@ -57,22 +57,6 @@ public class PersonalController {
         this.userRolesRepository = userRolesRepository;
     }
 
-
-  /*  @GetMapping("/user")
-    public String getPeople(Model model) {
-        //logService.saveLog("переход /log", "");
-        model.addAttribute("something", "hello in controller");
-        model.addAttribute("people", Arrays.asList(
-                new Persons("John", 20),
-                new Persons("Sarah", 21),
-                new Persons("Simon", 22)
-        ));
-        return "ListPeople";
-    }*/
-
-
-
-
     @GetMapping("/user")
     public String users(Model model) {
         List<UserDto> users = userService.findAllUsers();
@@ -90,13 +74,13 @@ public class PersonalController {
         mav.addObject("logs", logEntryRepository.findAll());
         return mav;
     }
+
     @GetMapping("/users/log")
-    public String saveLogToFile(){
+    public String saveLogToFile() {
         LogToFile logToFile = new LogToFile(logEntryRepository);
         logToFile.exportLogs();
-     return "redirect:/logs";
+        return "redirect:/logs";
     }
-
 
 
     @GetMapping("/users/deleteUser")
@@ -150,7 +134,7 @@ public class PersonalController {
             String s;
             if (rolesValue.equals("1")) {
                 s = "ROLE_ADMIN";
-            } else if (rolesValue.equals("2")){
+            } else if (rolesValue.equals("2")) {
                 s = "ROLE_USER";
             } else {
                 s = "READ_ONLY";
@@ -166,17 +150,27 @@ public class PersonalController {
             updatedUser.setRoles(Arrays.asList(role));
 
             // Обновляем пароль пользователя, если он был изменен
-            if (!userDto.getPassword().isEmpty()) {
-                updatedUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+                if (!userDto.getPassword().equals(existingUser.getPassword())) {
+                    updatedUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+                } else {
+                    updatedUser.setPassword(existingUser.getPassword());
+                }
+                // Сохраняем обновленного пользователя в базе данных
+                userService.updateUser(updatedUser);
+                return "redirect:/users";
             }
-            // Сохраняем обновленного пользователя в базе данных
-            userService.updateUser(updatedUser);
-            return "redirect:/users";
+            // Handle the case when userService is null
+            // Log an error or throw an exception
+
+
         }
-        // Handle the case when userService is null
-        // Log an error or throw an exception
-
         return "redirect:/user/profile?error";
-    }
 
+    }
 }
+
+
+
+
+

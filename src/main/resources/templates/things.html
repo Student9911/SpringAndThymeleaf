@@ -24,9 +24,6 @@
                     <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/list}">Students</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/logs}">For logs</a>
                 </li>
             </ul>
@@ -40,7 +37,7 @@
 </nav>
 <div class="container">
     <div class="row col-md-10">
-        <h2>Список пользователей</h2>
+        <h2>Список вещей</h2>
     </div>
     <table class="table table-bordered table-striped" id="userTable">
         <thead class="table-dark">
@@ -49,6 +46,7 @@
             <th>название вещи</th>
             <th>кто добавил</th>
             <th>количество</th>
+            <th>локация</th>
             <th>а тут кнопки и все такое</th>
         </tr>
         </thead>
@@ -56,8 +54,9 @@
         <tr th:each="thing: ${things}">
             <td th:text="${thing.id}" />
             <td th:text="${thing.name}" />
-            <td th:text="${thing.userNames}" />
+            <td th:text="${thing.userName}" />
             <td th:text="${thing.quantity}" />
+            <td th:text="${thing.locationThing}" />
 
             <td>
                 <a th:href="@{/thing/showUpdateForm(thingId=${thing.id})}" class="btn btn-info">Update</a>

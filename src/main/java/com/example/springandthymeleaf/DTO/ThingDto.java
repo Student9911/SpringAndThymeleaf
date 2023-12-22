@@ -11,16 +11,12 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class ThingDto {
 
     private Long id;
     @NotEmpty
+    private String name;
     private String userName;
-    @NotEmpty(message = "Password should be empty")
-    private String password;
-    private String role;
-
-
+    private String quantity;
+    private String locationThing;
 }
-
-

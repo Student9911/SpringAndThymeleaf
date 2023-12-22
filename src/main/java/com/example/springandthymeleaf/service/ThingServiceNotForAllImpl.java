@@ -36,7 +36,7 @@ public class ThingServiceNotForAllImpl implements ThingServiceNotForAll{
         List<Thing> things;
         if (s.equals("ROLE_USER")) {
             things = thingRepository.findAll().stream()
-                    .filter(thing -> thing.getUserNames().equals(principal.getName()))
+                    .filter(thing -> thing.getThingName().equals(principal.getName()))
                     .toList();
 
         } else {

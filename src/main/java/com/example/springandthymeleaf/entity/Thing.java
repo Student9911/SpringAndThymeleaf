@@ -1,11 +1,15 @@
 package com.example.springandthymeleaf.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,11 +26,19 @@ public class Thing {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "userNames")
-    private String userNames;
+    @Column(nullable = false)
+    private String thingName;
 
     @Column(name = "quantity")
     private String quantity;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "thing_location",
+            joinColumns = {@JoinColumn(name = "thing_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "location_id", referencedColumnName = "id")}
+    )
+    private List<Location> location = new ArrayList<>();
 
 
 

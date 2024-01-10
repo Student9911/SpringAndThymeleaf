@@ -2,8 +2,8 @@ package com.example.springandthymeleaf.controller;
 
 import com.example.springandthymeleaf.DTO.ThingDto;
 import com.example.springandthymeleaf.entity.Location;
+import com.example.springandthymeleaf.entity.Role;
 import com.example.springandthymeleaf.entity.Thing;
-import com.example.springandthymeleaf.entity.User;
 import com.example.springandthymeleaf.repository.LocationRepository;
 import com.example.springandthymeleaf.repository.ThingLocationRepository;
 import com.example.springandthymeleaf.repository.ThingRepository;
@@ -26,6 +26,7 @@ import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -53,9 +54,14 @@ public class ThingController {
 
     @GetMapping("/thing/things")
     public String things(Model model, Principal principal) {
-        //List<Thing> things = thingRepository.findAll();
         List<ThingDto> things = thingService.findAllThings(principal);
         model.addAttribute("things", things);
+        String user = userRepository.findByUserName(principal.getName())
+                .getRoles().stream().map(Role::getName)
+                .collect(Collectors.joining(", "));
+        if (user.equals("READ_ONLY")) {
+            return "thingsForReadOnly";
+        }
         return "things";
     }
 
@@ -80,8 +86,7 @@ public class ThingController {
                         "вещь с таким именем уже существует");
                 return "redirect:/thing/things?error";
             } else {
-                // Handle the case when userService is null
-                // Log an error or throw an exception
+
             }
             if (result.hasErrors()) {
                 model.addAttribute("thing", thingDto);
@@ -108,6 +113,7 @@ public class ThingController {
         mav.addObject("thing", thing);
         return mav;
     }
+
     @PostMapping("/things/update")
     public String updateUser(@Valid @ModelAttribute("thing") ThingDto thingDto,
                              @RequestParam("location") String rolesValue,
@@ -126,7 +132,7 @@ public class ThingController {
             String s;
             if (rolesValue.equals("1")) {
                 s = "MOSCOW";
-            } else if (rolesValue.equals("2")){
+            } else if (rolesValue.equals("2")) {
                 s = "EKATERINBURG";
 
             } else {
@@ -136,17 +142,18 @@ public class ThingController {
             Location location = locationRepository.findByName(s);
             logService.saveLog("INFO", "User " + principal.getName() +
                     " изменил пользователя с логином: " + updatedThing.getName() +
-                    "\nпользователь после изменения: имя пользователя   '" + thingDto.getUserName() + "'\n его роль: " + s);
+                    "\nпользователь после изменения: имя пользователя   '" + thingDto.getUserName()
+                    + "'\n его роль: " + s);
 
 
             updatedThing.setLocation(Arrays.asList(location));
-            log.error("в /things/update thingService != null " + updatedThing.getName() + " " + updatedThing.getThingName() + updatedThing.getQuantity() + " " + s);
+            log.error("в /things/update thingService != null " + updatedThing.getName() + " "
+                    + updatedThing.getThingName() + updatedThing.getQuantity() + " " + s);
 
             // Сохраняем обновленного пользователя в базе данных
             thingService.updateThing(updatedThing);
 
             return "redirect:/thing/things";
-
 
 
         }
@@ -155,14 +162,13 @@ public class ThingController {
         return "redirect:/thing/things/profile?error";
 
     }
+
     @GetMapping("/thing/deleteThing")
-    public String deleteThing (@RequestParam Long thingId) {
+    public String deleteThing(@RequestParam Long thingId) {
         thingLocationRepository.deleteById(thingId);
         thingRepository.deleteById(thingId);
         return "redirect:/thing/things";
     }
-
-
 
 
 }

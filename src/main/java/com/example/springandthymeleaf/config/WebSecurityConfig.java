@@ -32,7 +32,7 @@ public class WebSecurityConfig {
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/default") // Общая страница для всех пользователей
+                                .defaultSuccessUrl("/index") // Общая страница для всех пользователей
                                 .successHandler((request, response, authentication) -> {
                                     for (GrantedAuthority authority : authentication.getAuthorities()) {
                                         if (authority.getAuthority().equals("ROLE_ADMIN")) {

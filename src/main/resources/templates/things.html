@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/exxtras/spring-security"
+
 >
 <head>
     <meta charset="UTF-8">
@@ -13,7 +15,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/index}">Registration and Login System</a>
+        <a class="navbar-brand" th:href="@{/index}">На главную</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -51,7 +53,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="thing: ${things}">
+        <tr th:each="thing: ${things}" th:object="${user}">
             <td th:text="${thing.id}" />
             <td th:text="${thing.name}" />
             <td th:text="${thing.userName}" />
@@ -61,8 +63,6 @@
             <td>
                 <a th:href="@{/thing/showUpdateForm(thingId=${thing.id})}" class="btn btn-info">Update</a>
                 <a th:href="@{/thing/deleteThing(thingId=${thing.id})}" class="btn btn-danger ml-2">Delete</a>
-
-
             </td>
         </tr>
         </tbody>

@@ -41,6 +41,4 @@ public class Thing {
     private List<Location> location = new ArrayList<>();
 
 
-
-
 }

@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -19,17 +19,21 @@ import java.util.List;
 @Service
 public class LogToFile {
     private LogEntryRepository logEntryRepository;
+    private LogService logService;
 
-    public LogToFile(LogEntryRepository logEntryRepository) {
+
+    public LogToFile(LogEntryRepository logEntryRepository, LogService logService) {
         this.logEntryRepository = logEntryRepository;
+
+        this.logService = logService;
     }
 
 
-    public void exportLogs() {
+    public String exportLogs(Principal principal) {
         log.info("connect -> exportLogs");
 
         // Логика для получения логов из базы данных H2
-        List<LogEntry> logs = logEntryRepository.findAll(); // предположим, что у вас есть метод findAll() для получения всех логов
+        List<LogEntry> logs = logEntryRepository.findAll();
 
         // Логика для сохранения логов в файл
         String logPath = "C:/Users/aurakhov/IdeaProjects/SpringAndThymeleaf/Logs/logs_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".txt";
@@ -49,8 +53,10 @@ public class LogToFile {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            logService.saveLog("ERROR", "пользователь \n" +
+                    "" + principal.getName() + "произошла ошибка при экспорте логов в файл");
+            return "redirect:/logs?error";
         }
-
 
 
         try (FileWriter writer = new FileWriter(logPath)) {
@@ -60,6 +66,13 @@ public class LogToFile {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            logService.saveLog("ERROR", "пользователь \n" +
+                    "" + principal.getName() + "произошла ошибка при экспорте логов в файл" +
+                    "не удалось создать файл в: " + logPath);
+            return "redirect:/logs?error";
         }
+        logService.saveLog("INFO", "пользователь: " + principal.getName() + " выгрузил логи в файл");
+
+        return "redirect:/logs?success";
     }
 }

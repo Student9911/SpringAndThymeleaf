@@ -15,10 +15,11 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Slf4j
 
 @Service
-public class ThingServiceImpl implements ThingService{
+public class ThingServiceImpl implements ThingService {
 
     private final ThingRepository thingRepository;
     private final LogService logService;
@@ -54,7 +55,7 @@ public class ThingServiceImpl implements ThingService{
     }
 
     @Override
-    public List<ThingDto> findAllThings( Principal principal) {
+    public List<ThingDto> findAllThings(Principal principal) {
         User user = userRepository.findByUserName(principal.getName());
         String s = user.getRoles().stream()
                 .map(Role::getName)

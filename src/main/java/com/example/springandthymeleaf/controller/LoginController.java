@@ -24,8 +24,6 @@ import java.util.List;
 public class LoginController {
     private UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
 
     public LoginController(UserService userService) {
         this.userService = userService;
@@ -35,12 +33,12 @@ public class LoginController {
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("title", "login");
-        return "Login";
+        return "index";
     }
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "Login";
     }
 
     @GetMapping("/register")
@@ -64,8 +62,7 @@ public class LoginController {
                 return "redirect:/register?error";
             }
         } else {
-            // Handle the case when userService is null
-            // Log an error or throw an exception
+
         }
 
         if (result.hasErrors()) {
@@ -77,26 +74,6 @@ public class LoginController {
         return "redirect:/register?success";
     }
 
-   /* @GetMapping("/users")
-    public String users(Model model) {
-        List<UserDto> users = userService.findAllUsers();
-        model.addAttribute("users", users);
-        return "users";
-    }*/
-
-   /* @GetMapping("/users")
-    public ModelAndView getAllStudents() {
-        log.info(("/list -> connection"));
-        List<User> users = userRepository.findAll();
-        List<Role> roles = users.stream()
-                .flatMap(user -> user.getRoles().stream())
-                .collect(Collectors.toList());
-
-        ModelAndView mav = new ModelAndView("users");
-        mav.addObject("users", userRepository.findAll());
-        mav.addObject("userRole", roles);
-        return mav;
-    }*/
 
     @GetMapping("/users")
     public String users(Model model) {

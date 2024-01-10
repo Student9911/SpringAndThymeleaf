@@ -37,6 +37,15 @@
   <br/><br/>
   <h1>Логи системы</h1>
   <hr>
+  <div th:if="${param.success}">
+    <div class="alert alert-info">
+      логи успешно выгружены в файл
+    </div>
+  </div>
+  <div th:if="${param.error}">
+    <div class="alert alert-danger">Произошла ошибка при экспорте в файл, <br>
+      попробуйте еще раз или обратитесь за помощью</div>
+  </div>
   <table class="table table-bordered table-striped" id="userTable">
 
     <thead>

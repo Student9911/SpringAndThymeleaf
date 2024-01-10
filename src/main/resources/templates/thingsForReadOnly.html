@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/exxtras/spring-security"
+
 >
 <head>
   <meta charset="UTF-8">
@@ -24,9 +26,6 @@
           <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" th:href="@{/thing/things}">Страница вещи</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link active" aria-current="page" th:href="@{/logs}">For logs</a>
         </li>
       </ul>
@@ -40,32 +39,31 @@
 </nav>
 <div class="container">
   <div class="row col-md-10">
-    <h2>Список пользователей</h2>
+    <h2>Список вещей</h2>
   </div>
   <table class="table table-bordered table-striped" id="userTable">
     <thead class="table-dark">
     <tr>
       <th>ID</th>
-      <th>Логин</th>
-      <th>ROLE пользователя</th>
-      <th>а тут кнопки и все такое</th>
+      <th>название вещи</th>
+      <th>кто добавил</th>
+      <th>количество</th>
+      <th>локация</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user: ${users}">
-      <td th:text="${user.id}" />
-      <td th:text="${user.userName}" />
-      <td th:text="${user.role}" />
-      <td>
-        <a style="color: blueviolet"  th:href="@{/showUpdateForm(userId=${user.id})}" class="btn btn-info">Update</a>
+    <tr th:each="thing: ${things}" th:object="${user}">
+      <td th:text="${thing.id}" />
+      <td th:text="${thing.name}" />
+      <td th:text="${thing.userName}" />
+      <td th:text="${thing.quantity}" />
+      <td th:text="${thing.locationThing}" />
 
-        <a th:href="@{/users/deleteUser(userId=${user.id})}" class="btn btn-danger ml-2">Delete</a>
-      </td>
+
     </tr>
     </tbody>
   </table>
-  <hr/>
-  <a th:href="@{/register}" class="btn btn-primary">Добавить пользователя</a>
+
 </div>
 </body>
 </html>

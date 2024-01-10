@@ -57,6 +57,21 @@ public class PersonalController {
         this.userRolesRepository = userRolesRepository;
     }
 
+    @GetMapping("/index")
+    public String home(Model model) {
+        model.addAttribute("title", "index");
+        return "index";
+    }
+
+    @GetMapping("/info")
+    public String info(Model model) {
+        model.addAttribute("title", "infoPage");
+        model.addAttribute("info", "Курсовой проект |\n" +
+                "  Тема: Создать веб-приложение | группа: РИВ 220907у \n" +
+                " | Студент: Урахов А.");
+        return "infoPage";
+    }
+
     @GetMapping("/user")
     public String users(Model model) {
         List<UserDto> users = userService.findAllUsers();
@@ -76,10 +91,9 @@ public class PersonalController {
     }
 
     @GetMapping("/users/log")
-    public String saveLogToFile() {
-        LogToFile logToFile = new LogToFile(logEntryRepository);
-        logToFile.exportLogs();
-        return "redirect:/logs";
+    public String saveLogToFile(Principal principal) {
+        LogToFile logToFile = new LogToFile(logEntryRepository, logService);
+        return logToFile.exportLogs(principal);
     }
 
 
@@ -98,7 +112,7 @@ public class PersonalController {
     public ModelAndView showUpdateForm(@RequestParam Long userId, Principal principal) {
         logService.saveLog("INFO", "User " + principal.getName() +
                 " перешел на страницу showUpdateForm");
-        ModelAndView mav = new ModelAndView("add-student-form");
+        ModelAndView mav = new ModelAndView("add-user-form");
         Optional<User> optionalStudent = userRepository.findById(userId);
         User user = new User();
         if (optionalStudent.isPresent()) {
@@ -108,14 +122,6 @@ public class PersonalController {
         return mav;
     }
 
-    @PostMapping("/saveStudent")
-    public String saveStudent(@ModelAttribute User student, Principal principal) {
-        logService.saveLog("INFO", "User " + principal.getName() +
-                " сохранил пользователя с логином: " + student.getUserName());
-        userRepository.save(student);
-        return "redirect:/users";
-
-    }
 
     @PostMapping("/users/update")
     public String updateUser(@Valid @ModelAttribute("user") UserDto userDto,
@@ -160,8 +166,7 @@ public class PersonalController {
                 userService.updateUser(updatedUser);
                 return "redirect:/users";
             }
-            // Handle the case when userService is null
-            // Log an error or throw an exception
+
 
 
         }

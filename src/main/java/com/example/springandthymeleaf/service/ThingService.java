@@ -16,5 +16,6 @@ public interface ThingService {
     void updateThing(Thing thing);
 
     User findThingById(Long thingId);
+
     Thing findThingByThingName(String thingName);
 }
